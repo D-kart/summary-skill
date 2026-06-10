@@ -1,0 +1,304 @@
+/* =========================================================================
+ * summary-skill · Design Tokens (v1.0.0 · Interview Minutes Style)
+ * 与 investor-skill 同源：深蓝主调 / 米白纸面 / 罗马章节
+ * 用于：当 Agent 输出 HTML 格式的访谈纪要时引入。
+ * ========================================================================= */
+
+:root {
+  /* ---- Brand · 深蓝主调（与 investor-skill 同源） ---- */
+  --opc-brand-primary: #1a1a4e;
+  --opc-brand-accent:  #c8c0aa;
+  --opc-brand-ink:     #1a1a1a;
+  --opc-brand-muted:   #6b7280;
+  --opc-brand-paper:   #faf9f6;
+
+  /* ---- Semantic ---- */
+  --opc-info:       #1a1a4e;
+  --opc-confirmed:  #0a6e2a;   /* 已访到 */
+  --opc-partial:    #7a4f00;   /* 部分访到 */
+  --opc-missing:    #c00000;   /* 未访到 / 风险 */
+
+  /* ---- Surface ---- */
+  --opc-bg-canvas:   #f4f1eb;
+  --opc-bg-page:     #ffffff;
+  --opc-bg-soft:     #faf9f6;
+  --opc-bg-band:     #f5f5fa;
+  --opc-bg-quote:    #f8f6f0;   /* 引用对方原话的背景 */
+  --opc-border:      #c8c0aa;
+  --opc-border-soft: #e8e4da;
+
+  /* ---- Typography ---- */
+  --opc-font-serif: "Times New Roman", "Songti SC", "SimSun", serif;
+  --opc-font-sans:  "Arial", "PingFang SC", -apple-system, sans-serif;
+  --opc-font-mono:  "SF Mono", "Menlo", "Consolas", monospace;
+
+  --opc-fs-title:   18pt;
+  --opc-fs-subtitle:10.5pt;
+  --opc-fs-section: 8pt;
+  --opc-fs-topic:   12pt;       /* 主题块标题 */
+  --opc-fs-body:    10pt;
+  --opc-fs-table:   9pt;
+  --opc-fs-th:      7.5pt;
+  --opc-fs-meta:    7.5pt;
+  --opc-fs-ts:      8.5pt;      /* 时间戳字号 */
+  --opc-fs-caption: 7pt;
+
+  --opc-lh-tight: 1.2;
+  --opc-lh-base:  1.6;
+  --opc-lh-body:  1.7;
+}
+
+/* ───────── Page Frame ───────── */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: var(--opc-font-serif);
+  background: var(--opc-bg-canvas);
+  color: var(--opc-brand-ink);
+  font-size: var(--opc-fs-body);
+  line-height: var(--opc-lh-body);
+}
+.opc-page {
+  max-width: 860px;
+  margin: 36px auto;
+  background: var(--opc-bg-page);
+  box-shadow: 0 2px 18px rgba(0,0,0,0.13);
+  padding: 56px 68px 72px;
+}
+
+/* ───────── Letterhead ───────── */
+.opc-header-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  border-bottom: 2.5px solid var(--opc-brand-primary);
+  padding-bottom: 10px;
+  margin-bottom: 6px;
+}
+.opc-firm-name {
+  font-size: 8pt;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--opc-brand-primary);
+  font-family: var(--opc-font-sans);
+  font-weight: 700;
+}
+.opc-doc-meta {
+  font-family: var(--opc-font-sans);
+  font-size: var(--opc-fs-meta);
+  color: #555;
+  text-align: right;
+  line-height: 1.65;
+}
+.opc-confidential {
+  background: var(--opc-brand-primary);
+  color: #fff;
+  text-align: center;
+  font-family: var(--opc-font-sans);
+  font-size: 7pt;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  padding: 3px 0;
+  margin-bottom: 24px;
+}
+
+/* ───────── Title Block ───────── */
+.opc-title-block {
+  border-left: 4px solid var(--opc-brand-primary);
+  padding-left: 16px;
+  margin-bottom: 24px;
+}
+.opc-report-type {
+  font-family: var(--opc-font-sans);
+  font-size: 7.5pt;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #888;
+  margin-bottom: 4px;
+}
+.opc-report-title {
+  font-size: var(--opc-fs-title);
+  font-weight: bold;
+  color: var(--opc-brand-primary);
+  line-height: var(--opc-lh-tight);
+}
+
+/* ───────── Meta Bar（访谈对象 / 时间 / 地点 / 人员） ───────── */
+.opc-meta-bar {
+  display: grid; grid-template-columns: repeat(2, 1fr); gap: 0;
+  border: 1px solid var(--opc-border);
+  margin-bottom: 28px;
+}
+.opc-meta-item {
+  padding: 9px 13px;
+  border-right: 1px solid var(--opc-border);
+  border-bottom: 1px solid var(--opc-border);
+  font-size: 9pt;
+}
+.opc-meta-item:nth-child(2n) { border-right: none; }
+.opc-meta-item:nth-last-child(-n+2) { border-bottom: none; }
+.opc-meta-label {
+  font-family: var(--opc-font-sans);
+  font-size: 7pt;
+  letter-spacing: 1px;
+  color: #888;
+  text-transform: uppercase;
+  margin-bottom: 3px;
+}
+.opc-meta-value {
+  color: var(--opc-brand-ink);
+  font-weight: 600;
+}
+
+/* ───────── Section ───────── */
+.opc-section { margin-bottom: 24px; }
+.opc-section-title {
+  font-family: var(--opc-font-sans);
+  font-size: var(--opc-fs-section);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--opc-brand-primary);
+  border-bottom: 1px solid var(--opc-brand-primary);
+  padding-bottom: 3px;
+  margin-bottom: 14px;
+}
+
+/* ───────── Topic Block（主题块） ───────── */
+.opc-topic {
+  margin-bottom: 22px;
+  padding-left: 14px;
+  border-left: 3px solid var(--opc-brand-primary);
+}
+.opc-topic-title {
+  font-size: var(--opc-fs-topic);
+  font-weight: bold;
+  color: var(--opc-brand-primary);
+  line-height: 1.4;
+  margin-bottom: 6px;
+  font-family: var(--opc-font-serif);
+}
+.opc-timestamp {
+  display: inline-block;
+  font-family: var(--opc-font-mono);
+  font-size: var(--opc-fs-ts);
+  color: var(--opc-brand-muted);
+  background: var(--opc-bg-soft);
+  padding: 1px 7px;
+  border: 1px solid var(--opc-border-soft);
+  margin-left: 6px;
+}
+.opc-timestamp.tbd {
+  color: var(--opc-partial);
+  border-color: var(--opc-partial);
+  background: #fff8ea;
+}
+.opc-topic-body {
+  font-size: var(--opc-fs-body);
+  line-height: var(--opc-lh-body);
+  color: var(--opc-brand-ink);
+}
+.opc-topic-body p { margin-bottom: 7px; }
+.opc-topic-body ul { padding-left: 20px; margin-bottom: 7px; }
+.opc-topic-body li { margin-bottom: 4px; }
+.opc-supplement {
+  display: inline-block;
+  font-family: var(--opc-font-sans);
+  font-size: 7.5pt;
+  color: var(--opc-brand-muted);
+  background: var(--opc-bg-band);
+  padding: 1px 6px;
+  margin-right: 4px;
+  letter-spacing: 0.3px;
+}
+.opc-speaker {
+  font-weight: 700;
+  color: var(--opc-brand-primary);
+}
+
+/* ───────── Quote Block（对方原话引用） ───────── */
+.opc-quote {
+  background: var(--opc-bg-quote);
+  border-left: 3px solid var(--opc-brand-accent);
+  padding: 10px 14px;
+  font-style: italic;
+  font-size: 9.5pt;
+  color: #444;
+  margin: 8px 0;
+}
+
+/* ───────── Coverage Table（覆盖度核查表） ───────── */
+.opc-coverage-table {
+  width: 100%; border-collapse: collapse;
+  font-size: var(--opc-fs-table);
+}
+.opc-coverage-table th {
+  background: var(--opc-brand-primary); color: #fff;
+  font-family: var(--opc-font-sans); font-size: var(--opc-fs-th);
+  text-transform: uppercase; letter-spacing: 1px;
+  padding: 7px 10px; text-align: left;
+}
+.opc-coverage-table td {
+  padding: 7px 10px; border-bottom: 1px solid var(--opc-border-soft);
+  vertical-align: top;
+}
+.opc-coverage-table tr:nth-child(even) td { background: var(--opc-bg-soft); }
+.opc-coverage-table .opc-cat {
+  font-weight: bold; color: var(--opc-brand-primary);
+  font-family: var(--opc-font-sans); font-size: 8.5pt;
+  width: 14%;
+}
+.opc-coverage-table .opc-dim { width: 26%; }
+.opc-status-ok {
+  color: var(--opc-confirmed); font-weight: 700;
+  font-family: var(--opc-font-sans); font-size: 7.5pt;
+}
+.opc-status-partial {
+  color: var(--opc-partial); font-weight: 700;
+  font-family: var(--opc-font-sans); font-size: 7.5pt;
+}
+.opc-status-missing {
+  color: var(--opc-missing); font-weight: 700;
+  font-family: var(--opc-font-sans); font-size: 7.5pt;
+}
+
+/* ───────── Follow-up Box（待确认问题清单） ───────── */
+.opc-followup-box {
+  border: 2px solid var(--opc-brand-primary);
+  padding: 16px 20px; background: var(--opc-bg-band); margin: 12px 0;
+}
+.opc-followup-label {
+  font-family: var(--opc-font-sans);
+  font-size: 7pt; letter-spacing: 2px; text-transform: uppercase;
+  color: var(--opc-brand-primary); margin-bottom: 8px; font-weight: 700;
+}
+.opc-followup-list { list-style: none; padding: 0; }
+.opc-followup-list li {
+  padding: 5px 0 5px 18px; position: relative;
+  font-size: 9.5pt; color: #222; line-height: 1.55;
+  border-bottom: 1px dashed var(--opc-border-soft);
+}
+.opc-followup-list li::before {
+  content: '?'; position: absolute; left: 0;
+  color: var(--opc-brand-primary);
+  font-weight: bold; font-size: 10pt;
+}
+
+/* ───────── Footer ───────── */
+.opc-footer {
+  margin-top: 36px;
+  border-top: 1px solid var(--opc-border);
+  padding-top: 10px;
+  font-family: var(--opc-font-sans);
+  font-size: 7pt; color: #999; line-height: 1.65;
+}
+
+/* ───────── Print & Mobile ───────── */
+@media print {
+  body { background: #fff; }
+  .opc-page { box-shadow: none; margin: 0; padding: 36px 50px; }
+}
+@media (max-width: 640px) {
+  .opc-page { padding: 20px 16px; }
+  .opc-meta-bar { grid-template-columns: 1fr; }
+  .opc-meta-item:nth-child(n) { border-right: none; border-bottom: 1px solid var(--opc-border); }
+}
