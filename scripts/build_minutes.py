@@ -19,6 +19,7 @@ from pathlib import Path
 from typing import List, Dict, Optional
 from docx import Document
 from docx.shared import Pt
+from docx.oxml.ns import qn
 
 TEMPLATE = Path(__file__).resolve().parent.parent / "assets" / "templates" / "访谈纪要输出格式.docx"
 
@@ -46,8 +47,22 @@ DIM_LABELS = [
 ]
 
 
+def _apply_font(run):
+    """对单个 run 应用 楷体 五号 (10.5pt)，与模板表格的其余列一致。"""
+    run.font.size = Pt(10.5)  # 五号
+    run.font.name = '楷体'
+    rPr = run._element.get_or_add_rPr()
+    rFonts = rPr.find(qn('w:rFonts'))
+    if rFonts is None:
+        from lxml import etree
+        rFonts = etree.SubElement(rPr, qn('w:rFonts'))
+    rFonts.set(qn('w:ascii'), '楷体')
+    rFonts.set(qn('w:hAnsi'), '楷体')
+    rFonts.set(qn('w:eastAsia'), '楷体')
+
+
 def _set_cell_text(cell, content: str):
-    """清空 cell 并按换行分段写入。"""
+    """清空 cell，按换行分段写入，全部 run 应用 楷体 五号。"""
     paras = list(cell.paragraphs)
     for p in paras[1:]:
         p._element.getparent().remove(p._element)
@@ -55,9 +70,13 @@ def _set_cell_text(cell, content: str):
     for r in list(first.runs):
         r._element.getparent().remove(r._element)
     lines = content.split("\n")
-    first.add_run(lines[0])
+    run = first.add_run(lines[0])
+    _apply_font(run)
     for line in lines[1:]:
-        cell.add_paragraph(line)
+        p = cell.add_paragraph(line)
+        # 新加的段落只有一个 run（add_paragraph 返回的 paragraph，run 是默认创建的）
+        for r in p.runs:
+            _apply_font(r)
 
 
 def _add_section_heading(doc, text: str):
