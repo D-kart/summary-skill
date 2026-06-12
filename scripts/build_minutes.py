@@ -47,22 +47,23 @@ DIM_LABELS = [
 ]
 
 
-def _apply_font(run):
-    """对单个 run 应用 楷体 五号 (10.5pt)，与模板表格的其余列一致。"""
-    run.font.size = Pt(10.5)  # 五号
-    run.font.name = '楷体'
+def _set_run_font(run, font_name: str, size_pt: float, bold: bool = False):
+    """对单个 run 设置字体、字号、加粗（中文三个命名空间统一设）。"""
+    run.font.size = Pt(size_pt)
+    run.font.name = font_name
+    run.bold = bold
     rPr = run._element.get_or_add_rPr()
     rFonts = rPr.find(qn('w:rFonts'))
     if rFonts is None:
         from lxml import etree
         rFonts = etree.SubElement(rPr, qn('w:rFonts'))
-    rFonts.set(qn('w:ascii'), '楷体')
-    rFonts.set(qn('w:hAnsi'), '楷体')
-    rFonts.set(qn('w:eastAsia'), '楷体')
+    rFonts.set(qn('w:ascii'), font_name)
+    rFonts.set(qn('w:hAnsi'), font_name)
+    rFonts.set(qn('w:eastAsia'), font_name)
 
 
 def _set_cell_text(cell, content: str):
-    """清空 cell，按换行分段写入，全部 run 应用 楷体 五号。"""
+    """清空 cell，按换行分段写入，表格内容：黑体 五号 (10.5pt)。"""
     paras = list(cell.paragraphs)
     for p in paras[1:]:
         p._element.getparent().remove(p._element)
@@ -71,19 +72,18 @@ def _set_cell_text(cell, content: str):
         r._element.getparent().remove(r._element)
     lines = content.split("\n")
     run = first.add_run(lines[0])
-    _apply_font(run)
+    _set_run_font(run, '黑体', 10.5)
     for line in lines[1:]:
         p = cell.add_paragraph(line)
-        # 新加的段落只有一个 run（add_paragraph 返回的 paragraph，run 是默认创建的）
         for r in p.runs:
-            _apply_font(r)
+            _set_run_font(r, '黑体', 10.5)
 
 
 def _add_section_heading(doc, text: str):
+    """章节标题：黑体 14pt 加粗。"""
     p = doc.add_paragraph()
     run = p.add_run(text)
-    run.bold = True
-    run.font.size = Pt(14)
+    _set_run_font(run, '黑体', 14, bold=True)
     return p
 
 
@@ -101,9 +101,19 @@ def build_minutes(
 
     # ---- docx ----
     doc = Document(str(TEMPLATE))
-    doc.paragraphs[0].text = f"{company}访谈纪要"
+
+    # 标题：黑体 18pt 加粗
+    title_p = doc.paragraphs[0]
+    title_p.text = f"{company}访谈纪要"
+    for run in title_p.runs:
+        _set_run_font(run, '黑体', 18, bold=True)
+
+    # 元信息行：黑体 12pt
     for i, k in enumerate(["访谈对象", "时间", "地点", "人员"], start=1):
-        doc.paragraphs[i].text = f"{k}：{meta.get(k, '')}"
+        meta_p = doc.paragraphs[i]
+        meta_p.text = f"{k}：{meta.get(k, '')}"
+        for run in meta_p.runs:
+            _set_run_font(run, '黑体', 12)
 
     table = doc.tables[0]
     assert len(table.rows) == 20
@@ -114,13 +124,17 @@ def build_minutes(
         doc.add_paragraph("")
         _add_section_heading(doc, "核心观点摘要")
         for i, kp in enumerate(key_points, 1):
-            doc.add_paragraph(f"{i}. {kp}")
+            p = doc.add_paragraph(f"{i}. {kp}")
+            for run in p.runs:
+                _set_run_font(run, '黑体', 12)
 
     if followups:
         doc.add_paragraph("")
         _add_section_heading(doc, "后续事项")
         for fu in followups:
-            doc.add_paragraph(f"- {fu}")
+            p = doc.add_paragraph(f"- {fu}")
+            for run in p.runs:
+                _set_run_font(run, '黑体', 12)
 
     out_docx = out_dir / f"{company}访谈纪要.docx"
     doc.save(str(out_docx))

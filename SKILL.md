@@ -1,7 +1,7 @@
 ---
 name: summary-skill
 title: 纪要官.skill
-version: 2.0.2
+version: 2.0.3
 license: MIT
 author: OPC-Studio (D-kart)
 homepage: https://github.com/D-kart/summary-skill
