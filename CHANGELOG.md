@@ -4,6 +4,13 @@
 
 ---
 
+## [2.0.2] - 2026-06-12
+
+### Changed
+- README 「OPC-Studio 同源 skill」表格新增 [`ma-pitch-skill`](https://github.com/D-kart/ma-pitch-skill)（M&A 并购标的推介书 AI Skill）。
+
+---
+
 ## [2.0.1] - 2026-06-12
 
 ### Fixed

@@ -130,6 +130,7 @@ summary-skill/
 | Skill | 定位 |
 |---|---|
 | [`investor-skill`](https://github.com/D-kart/investor-skill) | 投资人.skill · 行研 / 尽调 / 投资备忘录 |
+| [`ma-pitch-skill`](https://github.com/D-kart/ma-pitch-skill) | M&A 并购标的推介书 AI Skill |
 | [`presenter-skill`](https://github.com/D-kart/presenter-skill) | 路演者.skill · BP / 路演 / 对外材料 |
 | `summary-skill` | **纪要官.skill · 访谈纪要专家**（本仓） |
 | `yi-er-skill` / `bubu-skill` | 待发布 |
